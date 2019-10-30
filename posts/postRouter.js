@@ -1,6 +1,13 @@
 const express = 'express';
-
+const postDb = require('./postDb')
 const router = express.Router();
+const {
+    get,
+    getById,
+    insert,
+    update,
+    remove,
+  } = postDb;
 
 router.get('/', (req, res) => {
 

@@ -1,9 +1,19 @@
 const express = 'express';
-
+const userDb = require('./userDb');
 const router = express.Router();
+const {
+    get,
+    getById,
+    getUserPosts,
+    insert,
+    update,
+    remove
+} = userDb;
 
 router.post('/', (req, res) => {
-
+    insert(req.body)
+    .then(user => res.json())
+    .catch()
 });
 
 router.post('/:id/posts', (req, res) => {
