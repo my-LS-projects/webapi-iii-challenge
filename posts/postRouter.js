@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 const postDb = require('./postDb')
 const router = express.Router();
 const {
@@ -10,7 +10,7 @@ const {
   } = postDb;
 
 router.get('/', (req, res) => {
-
+    get().then(posts => res.status(200).json(posts)).catch(error => res.status(500).json({ error: "Failed to get posts" }))
 });
 
 router.get('/:id', (req, res) => {
