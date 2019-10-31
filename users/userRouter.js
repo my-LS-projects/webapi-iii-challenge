@@ -12,7 +12,7 @@ router.post("/", validateUser, (req, res) => {
 
 router.post("/:id/posts/", validateUserId, validatePost, (req, res) => {
   const blog = { text: req.body.text, user_id: req.user.id };
-  console.log("hello");
+
   postDb
     .insert(blog)
     .then(post => res.status(201).json(post))
@@ -52,7 +52,7 @@ router.delete("/:id", validateUserId, (req, res) => {
     .catch(error => res.status(500).json({ error: "Could not delete user" }));
 });
 
-router.put("/:id", validateUser, (req, res) => {
+router.put("/:id", validateUserId, (req, res) => {
   const { id } = req.user;
 
   update(id, req.body)
@@ -87,8 +87,7 @@ function validateUser(req, res, next) {
 }
 
 function validatePost(req, res, next) {
-    console.log('REQ', req)
-    console.log('REQ BODY', req.body)
+    
   if (!req.body) {
     res.status(400).json({ message: "missing post data" });
   } else if (!req.body.text) {

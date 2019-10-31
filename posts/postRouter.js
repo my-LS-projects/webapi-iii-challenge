@@ -30,17 +30,16 @@ router.delete('/:id', (req, res) => {
 });
 
 router.put('/:id', validatePostId, (req, res) => {
-    const { id } = req.params
-    const text = req.body
+    const { id } = req.post
     console.log('REQ BODY', req.body)
 
-    // if (!text) {
-    //     res.status(400).json({ message: "Please provide post text to update." })
-    // } else {
-        update(id, text)
+    if (!req.post) {
+        res.status(400).json({ message: "Please provide post text to update." })
+    } else {
+        update(id, req.body)
         .then(post => res.status(200).json(`Post updated`, { post }))
         .catch(error => res.status(500).json({ error: "Post could not be updated." }))
-    // }
+    }
 });
 
 // custom middleware
