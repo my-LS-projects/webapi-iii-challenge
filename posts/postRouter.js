@@ -15,36 +15,49 @@ router.get('/', (req, res) => {
     .catch(error => res.status(500).json({ error: "Failed to get posts" }))
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validatePostId, (req, res) => {
     const { id } = req.params
     getById(id)
-    .then(post => {
-        !post
-        ? res.status(404).json({ message: "The post with the specified ID does not exist" })
-        : res.status(200).json(post)
-    })
+    .then(post => res.status(200).json(post))
     .catch(error => res.status(500).json({ error: "Failed to get post" }))
 });
 
 router.delete('/:id', (req, res) => {
     const { id } = req.params
     remove(id)
-    .then(post => {
-        !post
-        ? res.status(404).json({ message: "The post with the specified ID does not exist" })
-        : res.status(200).json({ message: `Post with id of ${id} deleted`})
+    .then(post => res.status(200).json({ message: `Post with id of ${id} deleted`}))
     .catch(error => res.status(500).json({ error: "The post could not be deleted" }))
-})
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validatePostId, (req, res) => {
+    const { id } = req.params
+    const text = req.body
+    console.log('REQ BODY', req.body)
 
+    // if (!text) {
+    //     res.status(400).json({ message: "Please provide post text to update." })
+    // } else {
+        update(id, text)
+        .then(post => res.status(200).json(`Post updated`, { post }))
+        .catch(error => res.status(500).json({ error: "Post could not be updated." }))
+    // }
 });
 
 // custom middleware
 
 function validatePostId(req, res, next) {
+    const { id } = req.params
 
+    getById(id)
+    .then(post => {
+       if (post) {
+           req.post = post
+           next()
+       } else {
+           res.status(400).json({ message: "The post with the specified ID does not exist" })
+       }
+    })
+    .catch(error => res.status(400).json({ error: "Post does not exist" }))
 };
 
 module.exports = router;

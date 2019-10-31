@@ -5,6 +5,7 @@ const userRouter = require('./users/userRouter')
 const postRouter = require('./posts/postRouter')
 
 server.use(helmet());
+server.use(express.json())
 server.get('/', (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`)
 });
